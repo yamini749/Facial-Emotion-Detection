@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Face Emotion Detection</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input[type="file"] {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #555;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Face Emotion Detection</h1>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input
+          type="file"
+          name="file"
+          id="fileInput"
+          required
+          accept="image/*"
+        />
+        <button type="submit">Upload and Predict</button>
+      </form>
+
+      <h3 id="result"></h3>
+    </div>
+    <script>
+      document.getElementById("uploadForm").onsubmit = async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData();
+        const fileInput = document.getElementById("fileInput");
+
+        if (!fileInput.files.length) {
+          alert("Please select a file.");
+          return;
+        }
+
+        formData.append("file", fileInput.files[0]);
+
+        const response = await fetch("/predict", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          document.getElementById("result").innerText = "Error: " + error.error;
+        } else {
+          const result = await response.json();
+          document.getElementById("result").innerText =
+            "Prediction: " + result.prediction;
+        }
+      };
+    </script>
+  </body>
+</html>
