@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import cv2
-from keras.models import load_model
+import tensorflow as tf
+from tensorflow.keras.models import load_model
 import numpy as np
 TF_ENABLE_ONEDNN_OPTS=0
 app = Flask(__name__)
